@@ -1,15 +1,15 @@
 const express = require('express');
-const bodyParser = require('body-parser')
-const path = require('path');
+const cors = require('cors');
+const routes = require('./routes.js');
 const app = express();
-app.use(express.static(path.join(__dirname, 'build')));
+const { allowedOrigins } = require('./config.js');
 
-app.get('/ping', function (req, res) {
- return res.send('pong');
-});
+/**
+ * Configuring cors policy to only allowed hosts
+ */
+app.use(cors({
+  origin: allowedOrigins
+}));
 
-app.get('/', function (req, res) {
-  res.sendFile(path.join(__dirname, 'build', 'index.html'));
-});
-
-app.listen(process.env.PORT || 8080);
+app.use('/', routes);
+app.listen(8080);
